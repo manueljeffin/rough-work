@@ -19,8 +19,34 @@ public class Driver {
 
         //Now lets say API-I returns 5 products and API-II returns another 5
         //We would want to stitch those 10 products together,
-        // with each of them having the metadata of the parent API response
-        // they belong to
+        // with each product having the metadata of it's corresponding parent API response
+
+        /*
+        Product structure:
+
+        {
+          "productName": "product1",
+          "productId": "1"
+        }
+
+
+        API Response:
+
+        {
+          "something": "something",
+          "productList": [
+                {
+                  "productName": "product1",
+                  "productId": "1"
+                },
+                {
+                  "productName": "product2",
+                  "productId": "2"
+                }
+            ]
+        }
+
+         */
 
 
         List<ProductWrapper> list = driver.someMethod(driver.getResponseForOne(), driver.getResponseForTwo());
@@ -31,8 +57,8 @@ public class Driver {
 
         return CompletableFuture.supplyAsync(() -> {
             //Simulate first API call
-            Product productOne = new Product("s1", 1);
-            Product productTwo = new Product("s2", 2);
+            Product productOne = new Product("product1", 1);
+            Product productTwo = new Product("product2", 2);
             return new APIResponseWrapper(new Metadata("someMetadata1"),
                                           new APIResponse(Arrays.asList(productOne, productTwo), "something1"));
         });
@@ -41,8 +67,8 @@ public class Driver {
     private CompletableFuture<APIResponseWrapper> getResponseForTwo() {
         //Simulate second API call
         return CompletableFuture.supplyAsync(() -> {
-            Product productThree = new Product("s3", 3);
-            Product productFour = new Product("s4", 4);
+            Product productThree = new Product("product3", 3);
+            Product productFour = new Product("product4", 4);
             return new APIResponseWrapper(new Metadata("someMetadata2"),
                                           new APIResponse(Arrays.asList(productThree, productFour), "something2"));
         });

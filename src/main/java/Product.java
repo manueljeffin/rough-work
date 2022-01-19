@@ -2,20 +2,20 @@ package main.java;
 
 public class Product {
 
-    private final String someGuyString;
+    private final String productName;
 
-    private final Integer someGuyInteger;
+    private final Integer productId;
 
-    public Product(final String someGuyString, final Integer someGuyInteger) {
-        this.someGuyString = someGuyString;
-        this.someGuyInteger = someGuyInteger;
+    public Product(final String someGuyString, final Integer productId) {
+        this.productName = someGuyString;
+        this.productId = productId;
     }
 
-    public String getSomeGuyString() {
-        return someGuyString;
+    public String getProductName() {
+        return productName;
     }
 
-    public Integer getSomeGuyInteger() {
-        return someGuyInteger;
+    public Integer getProductId() {
+        return productId;
     }
 }
