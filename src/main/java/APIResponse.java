@@ -4,17 +4,17 @@ import java.util.List;
 
 public class APIResponse {
 
-    private List<SomeGuy> someGuyList;
+    private List<Product> productList;
 
     private String something;
 
-    public APIResponse(final List<SomeGuy> someGuyList, final String something) {
-        this.someGuyList = someGuyList;
+    public APIResponse(final List<Product> productList, final String something) {
+        this.productList = productList;
         this.something = something;
     }
 
-    public List<SomeGuy> getSomeGuyList() {
-        return someGuyList;
+    public List<Product> getSomeGuyList() {
+        return productList;
     }
 
     public String getSomething() {

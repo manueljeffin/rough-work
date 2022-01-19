@@ -1,12 +1,12 @@
 package main.java;
 
-public class SomeGuy {
+public class Product {
 
     private final String someGuyString;
 
     private final Integer someGuyInteger;
 
-    public SomeGuy(final String someGuyString, final Integer someGuyInteger) {
+    public Product(final String someGuyString, final Integer someGuyInteger) {
         this.someGuyString = someGuyString;
         this.someGuyInteger = someGuyInteger;
     }

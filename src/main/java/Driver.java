@@ -3,43 +3,59 @@ package main.java;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Driver {
     public static void main(String[] args) {
-        SomeGuy someGuyOne = new SomeGuy("s1", 1);
-        SomeGuy someGuyTwo = new SomeGuy("s2", 2);
 
-        APIResponse apiResponseOne = new APIResponse(Arrays.asList(someGuyOne, someGuyTwo), "something");
-        APIResponse apiResponseTwo = new APIResponse(Arrays.asList(someGuyOne, someGuyTwo), "something");
-
-        //Now let's say we also have some metadata for each response
-        Metadata metadataForAPIResponseOne = new Metadata("someMetadata1");
-        Metadata metadataForAPIResponseTwo = new Metadata("someMetadata2");
-
-        //This metadata has to be added to each level of SomeGuy
-        //But then the below "someMethod" takes in two APIResponse
-        //So have to append Metadata at APIResponse level first
-        //So creating a wrapper APIResponseWrapper and changing someMethod's contract to take in APIResponseWrapper
+        Driver driver = new Driver();
 
 
-        //someMethod returns List<SomeGuy>. But we don't want to lose metadata.
-        //So creating SomeGuyWrapper to hold this metadata and making it return List<SomeGuyWrapper>
+        //Aim is to call 2 APIs and merge the response in decorated fashion.
+        //API-I will have one metadata
+        //API-2 will have another metadata
+
+        //Now lets say API-I returns 5 products and API-II returns another 5
+        //We would want to stitch those 10 products together,
+        // with each of them having the metadata of the parent API response
+        // they belong to
 
 
-        List<SomeGuyWrapper> list = someMethod(new APIResponseWrapper(metadataForAPIResponseOne, apiResponseOne),
-                   new APIResponseWrapper(metadataForAPIResponseTwo, apiResponseTwo));
-
-        System.out.println(list);
+        List<ProductWrapper> list = driver.someMethod(driver.getResponseForOne(), driver.getResponseForTwo());
 
     }
 
-    private static List<SomeGuyWrapper> someMethod(APIResponseWrapper apiResponseOne, APIResponseWrapper apiResponseTwo) {
-        return Stream.of(apiResponseOne, apiResponseTwo)
-                .map(APIResponseWrapper::transform)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+    private CompletableFuture<APIResponseWrapper> getResponseForOne() {
+
+        return CompletableFuture.supplyAsync(() -> {
+            //Simulate first API call
+            Product productOne = new Product("s1", 1);
+            Product productTwo = new Product("s2", 2);
+            return new APIResponseWrapper(new Metadata("someMetadata1"),
+                                          new APIResponse(Arrays.asList(productOne, productTwo), "something1"));
+        });
+    }
+
+    private CompletableFuture<APIResponseWrapper> getResponseForTwo() {
+        //Simulate second API call
+        return CompletableFuture.supplyAsync(() -> {
+            Product productThree = new Product("s3", 3);
+            Product productFour = new Product("s4", 4);
+            return new APIResponseWrapper(new Metadata("someMetadata2"),
+                                          new APIResponse(Arrays.asList(productThree, productFour), "something2"));
+        });
+    }
+
+
+    private List<ProductWrapper> someMethod(CompletableFuture<APIResponseWrapper> future1,
+                                            CompletableFuture<APIResponseWrapper> future2) {
+        return Stream.of(future1, future2)
+                     .map(CompletableFuture::join)
+                     .map(APIResponseWrapper::transform)
+                     .flatMap(Collection::stream)
+                     .collect(Collectors.toList());
     }
 
 

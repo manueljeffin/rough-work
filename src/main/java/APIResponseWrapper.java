@@ -22,15 +22,15 @@ public class APIResponseWrapper {
         return apiResponse;
     }
 
-    public List<SomeGuyWrapper> transform() {
-        final List<SomeGuy> someGuyList = apiResponse.getSomeGuyList();
+    public List<ProductWrapper> transform() {
+        final List<Product> productList = apiResponse.getSomeGuyList();
 
-        final List<SomeGuyWrapper> someGuyWrapperList = new ArrayList<>();
+        final List<ProductWrapper> productWrapperList = new ArrayList<>();
 
-        for (SomeGuy someGuy : someGuyList) {
-            someGuyWrapperList.add(new SomeGuyWrapper(someGuy, this.metadata));
+        for (Product product : productList) {
+            productWrapperList.add(new ProductWrapper(product, this.metadata));
         }
-        return someGuyWrapperList;
+        return productWrapperList;
     }
 
 }
